@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Use correct character set. -->
+  <meta charset="utf-8">
+  <!-- Tell IE to use the latest, best version. -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <title>Hello World!</title>
+  <script src="../Build/Cesium/Cesium.js"></script>
+  <style>
+      @import url(../Build/Cesium/Widgets/widgets.css);
+      html, body, #cesiumContainer {
+          width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+      }
+  </style>
+
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+</head>
+<body>
+  <div id="cesiumContainer"></div>
+  <script>
+    var viewer = new Cesium.Viewer('cesiumContainer');
+
+
+
+//    var wyoming = viewer.entities.add({
+//        name : 'Wyoming',
+//        polygon : {
+//            hierarchy : Cesium.Cartesian3.fromDegreesArray([
+//                150,30,
+//                150,40,
+//                160,40,
+//                160,30]),
+//            material : Cesium.Color.RED.withAlpha(0.5),
+//            outline : true,
+//            outlineColor : Cesium.Color.BLACK
+//        }
+//    });
+
+    const RADIUS = 7000;
+
+    var max = 0;
+    var min = 0;
+
+    d3.csv('./each_point_sv.csv', function(csv){ //csvデータの読み込み
+        //  Stringを数値に変換
+        for(var i = 0; i < csv.length; i++) {
+            csv[i].value = Number(csv[i].value);
+        }
+
+        max = d3.max(csv, function(d){ return Number(d.value) });
+        min = d3.min(csv, function(d){ return Number(d.value) });
+        var colorScale = d3.scale.linear().domain([min, max]).range([0.1, 1]); //カラースケールを作成
+
+        for(var i = 0; i < csv.length; i++) {
+//            volume[i] = viewer.entities.add({
+//                name: 'Blue ellipsoid',
+//                position: Cesium.Cartesian3.fromDegrees(csv[i].lon, csv[i].lat, -1),
+//                ellipsoid: {
+//                    radii: new Cesium.Cartesian3(RADIUS, RADIUS, RADIUS),
+//                    material: color
+//                }
+//            });
+//            console.log(colorScale(csv[i].value))
+            var color = Cesium.Color.fromRgba(0xFFFFFFFF);
+
+            color.alpha = color.alpha * colorScale(csv[i].value)
+
+            volume = viewer.entities.add({
+                position: Cesium.Cartesian3.fromDegrees(csv[ i ].lon, csv[ i ].lat, 0),
+                name: 'Green circle at height',
+                ellipse: {
+                    semiMinorAxis: RADIUS,
+                    semiMajorAxis: RADIUS,
+                    height: 0,
+                    material: color
+                }
+            });
+
+            viewer.zoomTo(volume);
+        }
+    });
+  </script>
+</body>
+</html>

@@ -1,7 +1,11 @@
 .idea
 node_modules
 Build
-Apps
+Apps/CesiumViewer
+Apps/SampleData
+Apps/Sandcastle
+Apps/TimelineDemo
+
 Source
 Specs
 ThirdParty
