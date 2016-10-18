@@ -39,8 +39,8 @@
 //        }
 //    });
 
-    const RADIUS = 8000;
-
+//    const RADIUS = 8000;
+    const RADIUS = 30000;
     var max = 0;
     var min = 0;
 
@@ -48,51 +48,34 @@
         //  Stringを数値に変換
         for(var i = 0; i < csv.length; i++) {
             csv[i].value = Number(csv[i].value);
-        }
-
-        max = d3.max(csv, function(d){ return Number(d.value) });
-        min = d3.min(csv, function(d){ return Number(d.value) });
-        var colorScale = d3.scale.linear().domain([min, max]).range([0, 1]); //カラースケールを作成
-
-        for(var i = 0; i < csv.length; i++) {
-            var color = Cesium.Color.fromHsl(2 / 3 * (1 - colorScale(csv[i].value)), 0.8, 0.5, 0.9);
-
-            //  circle
-            volume = viewer.entities.add({
-                position: Cesium.Cartesian3.fromDegrees(csv[ i ].lon, csv[ i ].lat, 0),
-                name: 'Green circle at height',
-                ellipse: {
-                    semiMinorAxis: RADIUS,
-                    semiMajorAxis: RADIUS,
-                    height: 100,
-                    material: color
-                }
-            });
-
-            //  box
-//            const x = 10000;
-//            volume = viewer.entities.add({
-//                name: 'box',
-//                position: Cesium.Cartesian3.fromDegrees(csv[i].lon, csv[i].lat, 0),
-//                box: {
-//                    dimensions : new Cesium.Cartesian3(x, x, 1),
-//                    material : color
-//                }
-//            });
-
-            //  sphere
-//            volume = viewer.entities.add({
-//                name: 'Blue ellipsoid',
-//                position: Cesium.Cartesian3.fromDegrees(csv[i].lon, csv[i].lat, -1),
-//                ellipsoid: {
-//                    radii: new Cesium.Cartesian3(RADIUS, RADIUS, RADIUS),
-//                    material: color
-//                }
-//            });
-
-
-            viewer.zoomTo(volume);
-
+            if(i == 0 || i == 2 || i == 205 || i == 388 || i == 999 || i == 5892 || i == 6002 || i == 10001 ) {
+                var color = Cesium.Color.fromRgba(0xFF0000FF);
+                volume = viewer.entities.add({
+                    position: Cesium.Cartesian3.fromDegrees(csv[ i ].lon, csv[ i ].lat, 0),
+                    name: 'Green circle at height',
+                    ellipse: {
+                        semiMinorAxis: RADIUS,
+                        semiMajorAxis: RADIUS,
+                        height: 100,
+                        material: color
+                    }
+                });
+                viewer.zoomTo(volume);
+            }
+            if(i == 2999 || i == 5009 || i == 5883 || i == 7424 || i == 9000 || i == 9495 || i == 9950 || i == 10029 ) {
+                var color = Cesium.Color.fromRgba(0x00FFFFFF);
+                volume = viewer.entities.add({
+                    position: Cesium.Cartesian3.fromDegrees(csv[ i ].lon, csv[ i ].lat, 0),
+                    name: 'Green circle at height',
+                    ellipse: {
+                        semiMinorAxis: RADIUS,
+                        semiMajorAxis: RADIUS,
+                        height: 100,
+                        material: Cesium.Color.GREEN
+                    }
+                });
+                viewer.zoomTo(volume);
+            }
         }
     });
   </script>
