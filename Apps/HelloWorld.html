@@ -44,7 +44,7 @@
     var max = 0;
     var min = 0;
 
-    d3.csv('./each_point_sv.csv', function(csv){ //csvデータの読み込み
+    d3.csv('./each_point_st.csv', function(csv){ //csvデータの読み込み
         //  Stringを数値に変換
         for(var i = 0; i < csv.length; i++) {
             csv[i].value = Number(csv[i].value);
@@ -52,7 +52,7 @@
 
         max = d3.max(csv, function(d){ return Number(d.value) });
         min = d3.min(csv, function(d){ return Number(d.value) });
-        var colorScale = d3.scale.linear().domain([-5.6, 0.5]).range([0, 1]); //カラースケールを作成
+        var colorScale = d3.scale.linear().domain([min, max]).range([0, 1]); //カラースケールを作成
 
         for(var i = 0; i < csv.length; i++) {
             var color = Cesium.Color.fromHsl(2 / 3 * (1 - colorScale(csv[i].value)), 0.8, 0.5, 0.9);
@@ -64,7 +64,7 @@
                 ellipse: {
                     semiMinorAxis: RADIUS,
                     semiMajorAxis: RADIUS,
-                    height: 0,
+                    height: 100,
                     material: color
                 }
             });
